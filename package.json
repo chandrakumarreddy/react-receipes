@@ -1,0 +1,42 @@
+{
+  "name": "react-receipes",
+  "version": "1.0.0",
+  "description": "receipes application",
+  "main": "server.js",
+  "scripts": {
+    "server": "babel-watch src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chandrakumarreddy/react-receipes.git"
+  },
+  "keywords": [
+    "receipes",
+    "react",
+    "nodejs"
+  ],
+  "author": "chandra <chandrapenugonda655@gmail.com> (example.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chandrakumarreddy/react-receipes/issues"
+  },
+  "homepage": "https://github.com/chandrakumarreddy/react-receipes#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "babel-watch": "^7.0.0"
+  },
+  "dependencies": {
+    "apollo-server-express": "latest",
+    "bcryptjs": "latest",
+    "body-parser": "latest",
+    "concurrently": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "^4.17.1",
+    "graphql": "latest",
+    "graphql-tools": "latest",
+    "jsonwebtoken": "latest",
+    "mongoose": "latest"
+  }
+}
