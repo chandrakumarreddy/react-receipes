@@ -21,6 +21,9 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 const PORT = process.env.PORT || 4444;
 
 server.applyMiddleware({ app, path: "/graphql" });
