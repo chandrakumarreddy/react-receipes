@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
-import "./App.css";
 import { GET_ALL_RECEIPES } from "../Queries";
 
 function App() {
