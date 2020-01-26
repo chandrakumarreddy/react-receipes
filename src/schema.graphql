@@ -1,0 +1,21 @@
+type Recipe {
+  name: String!
+  category: String!
+  description: String!
+  instructions: String!
+  createdAt: String
+  likes: Int
+  username: String
+}
+
+type User {
+  username: String!
+  email: String!
+  password: String!
+  joinedAt: String
+  favourites: [Recipe]
+}
+
+type Query {
+  getAllRecipes: [Recipe]
+}
