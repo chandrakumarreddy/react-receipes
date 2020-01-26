@@ -1,15 +1,25 @@
-const recipe = {
-  name: "a",
-  category: "b",
-  description: "String",
-  instructions: "String!",
-  createdAt: "String",
-  likes: 0,
-  username: "String"
+const getAllRecipes = async (root, args, { Recipe }) => {
+  return await Recipe.find({});
+};
+
+const addRecipe = async (root, args, { Recipe }) => {
+  const { name, category, description, instructions, username } = args;
+  const newRecipe = await new Recipe({
+    name,
+    category,
+    description,
+    instructions,
+    username
+  }).save();
+  return newRecipe;
 };
 
 const Query = {
-  getAllRecipes: () => [recipe]
+  getAllRecipes
 };
 
-export default { Query };
+const Mutation = {
+  addRecipe
+};
+
+export default { Query, Mutation };
