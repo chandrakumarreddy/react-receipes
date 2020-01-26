@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export default async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/react-receipes", {
+    await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true
