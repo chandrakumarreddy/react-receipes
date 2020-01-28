@@ -42,7 +42,12 @@ const signInUser = async (root, { email, password }, { User }) => {
   };
 };
 
-const getCurrentUser = async (root, args, { User, currentUser }) => {
+const getCurrentUser = async (
+  root,
+  args,
+  { User, currentUser, tokenExpired }
+) => {
+  if (tokenExpired) throw new Error("token expired");
   if (!currentUser) return null;
   return await User.findOne({ email: currentUser.email });
 };

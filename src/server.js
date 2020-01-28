@@ -26,7 +26,7 @@ app.use(
   express.urlencoded({ extended: false }),
   cors({ origin: "http://localhost:3000", credentials: true })
 );
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
   const authorizationHeader = req.headers["authorization"];
   if (
     authorizationHeader &&
@@ -35,9 +35,9 @@ app.use(async (req, res, next) => {
   ) {
     const token = authorizationHeader.split("Bearer ")[1];
     try {
-      req.currentUser = await jwt.verify(token, process.env.JWT_SECRET);
+      req.currentUser = jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
-      // do nothing
+      req.tokenExpired = true;
     }
   }
   next();
@@ -45,8 +45,8 @@ app.use(async (req, res, next) => {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req: { currentUser = "" } }) => {
-    return { Recipe, User, currentUser };
+  context: ({ req: { currentUser = "", tokenExpired = false } }) => {
+    return { Recipe, User, currentUser, tokenExpired };
   }
 });
 server.applyMiddleware({ app, path: "/graphql" });

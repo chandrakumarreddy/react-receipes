@@ -24,14 +24,19 @@ const client = new ApolloClient({
       }
     });
   },
-  onError: networkError => {
+  onError: ({ networkError, graphQLErrors }) => {
+    if (graphQLErrors) {
+      const tokenExpired = graphQLErrors.some(
+        item => item.message === "token expired"
+      );
+      if (tokenExpired) localStorage.removeItem("token");
+    }
     console.log(networkError);
   }
 });
 
 const Root = () => {
   const { data, refetch } = useQuery(GET_CURRENT_USER);
-  console.log(data);
   return (
     <Router>
       <Switch>
