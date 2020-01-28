@@ -10,6 +10,7 @@ import Signup from "./components/Auth/Signup";
 import "./index.css";
 
 import { GET_CURRENT_USER } from "./Queries/query";
+import NavBar from "./components/NavBar";
 
 const client = new ApolloClient({
   uri: "http://localhost:4444/graphql",
@@ -39,14 +40,17 @@ const Root = () => {
   const { data, refetch } = useQuery(GET_CURRENT_USER);
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route
-          path="/signin"
-          render={props => <Signin {...props} refetch={refetch} />}
-        />
-        <Route path="/signup" component={Signup} />
-      </Switch>
+      <React.Fragment>
+        <NavBar session={data} />
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route
+            path="/signin"
+            render={props => <Signin {...props} refetch={refetch} />}
+          />
+          <Route path="/signup" component={Signup} />
+        </Switch>
+      </React.Fragment>
     </Router>
   );
 };

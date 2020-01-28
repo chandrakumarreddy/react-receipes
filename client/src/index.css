@@ -16,3 +16,6 @@ code {
 .center {
   text-align: center;
 }
+.bbtm-lightgray {
+  border-bottom: 1px solid lightgray;
+}
