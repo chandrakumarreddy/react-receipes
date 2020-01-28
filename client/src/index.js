@@ -2,26 +2,49 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 
 import App from "./components/App";
 import Signin from "./components/Auth/Signin";
 import Signup from "./components/Auth/Signup";
 import "./index.css";
 
-const Root = () => (
-  <Router>
-    <Switch>
-      <Route exact path="/" component={App} />
-      <Route path="/signin" component={Signin} />
-      <Route path="/signup" component={Signup} />
-    </Switch>
-  </Router>
-);
+import { GET_CURRENT_USER } from "./Queries/query";
 
 const client = new ApolloClient({
-  uri: "http://localhost:4444/graphql"
+  uri: "http://localhost:4444/graphql",
+  fetchOptions: {
+    credentials: "include"
+  },
+  request: operation => {
+    const token = localStorage.getItem("token");
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ""
+      }
+    });
+  },
+  onError: networkError => {
+    console.log(networkError);
+  }
 });
+
+const Root = () => {
+  const { data, refetch } = useQuery(GET_CURRENT_USER);
+  console.log(data);
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/" component={App} />
+        <Route
+          path="/signin"
+          render={props => <Signin {...props} refetch={refetch} />}
+        />
+        <Route path="/signup" component={Signup} />
+      </Switch>
+    </Router>
+  );
+};
 
 ReactDOM.render(
   <ApolloProvider client={client}>

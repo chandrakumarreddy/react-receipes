@@ -13,3 +13,12 @@ export const GET_ALL_RECEIPES = gql`
     }
   }
 `;
+export const GET_CURRENT_USER = gql`
+  query {
+    getCurrentUser {
+      username
+      email
+      _id
+    }
+  }
+`;

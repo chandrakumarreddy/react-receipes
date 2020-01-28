@@ -1,4 +1,5 @@
 import createToken from "./utils/createToken";
+import bcrypt from "bcryptjs";
 
 const getAllRecipes = async (root, args, { Recipe }) => {
   return await Recipe.find({});
@@ -16,8 +17,7 @@ const addRecipe = async (root, args, { Recipe }) => {
   return newRecipe;
 };
 
-const signupUser = async (root, { username, email, password }, { User }) => {
-  await User.deleteMany();
+const signUpUser = async (root, { username, email, password }, { User }) => {
   const user = await User.findOne({ username });
   if (user) {
     throw new Error("username already taken");
@@ -28,13 +28,34 @@ const signupUser = async (root, { username, email, password }, { User }) => {
   };
 };
 
+const signInUser = async (root, { email, password }, { User }) => {
+  const hasUser = await User.findOne({ email });
+  if (!hasUser) throw new Error("invalid credentails");
+  const isValid = bcrypt.compare(hasUser.password, password);
+  if (!isValid) throw new Error("invalid credentails");
+  return {
+    token: createToken(
+      { username: hasUser.username, email },
+      process.env.JWT_SECRET,
+      "1min"
+    )
+  };
+};
+
+const getCurrentUser = async (root, args, { User, currentUser }) => {
+  if (!currentUser) return null;
+  return await User.findOne({ email: currentUser.email });
+};
+
 const Query = {
-  getAllRecipes
+  getAllRecipes,
+  getCurrentUser
 };
 
 const Mutation = {
   addRecipe,
-  signupUser
+  signUpUser,
+  signInUser
 };
 
 export default { Query, Mutation };

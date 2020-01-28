@@ -24,6 +24,7 @@ type User {
 
 type Query {
   getAllRecipes: [Recipe]
+  getCurrentUser: User
 }
 
 type Mutation {
@@ -35,5 +36,6 @@ type Mutation {
     likes: Int
     username: String
   ): Recipe
-  signupUser(username: String!, email: String!, password: String!): Token
+  signUpUser(username: String!, email: String!, password: String!): Token
+  signInUser(email: String!, password: String!): Token
 }
