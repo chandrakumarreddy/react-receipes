@@ -1,29 +1,49 @@
 import React from "react";
+import { useMutation } from "@apollo/react-hooks";
+import { sign_up } from "../../Queries/mutation";
 
 const initialErrors = {
   username: "",
   email: "",
   password: "",
-  passwordConfirmation: ""
+  passwordConfirmation: "",
+  error: ""
 };
 
-export default function Signup() {
+export default function Signup(props) {
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
   const [errors, setErrors] = React.useState(initialErrors);
-  const handleSubmit = e => {
+  const [signup] = useMutation(sign_up);
+  const handleSubmit = async e => {
     e.preventDefault();
     const errors = {};
     if (!username) errors.username = "Username cannot be empty";
-    if (Object.keys(errors).length > 0) setErrors(errors);
+    if (Object.keys(errors).length > 0)
+      setErrors(prev => ({ ...prev, errors }));
+    try {
+      const { data } = await signup({
+        variables: { email, password, username }
+      });
+      localStorage.setItem("token", data.signUpUser.token);
+      props.refetch();
+      props.history.push("/");
+    } catch (error) {
+      setErrors(prev => ({ ...prev, error: error.message }));
+    }
   };
   return (
     <section className="section">
       <div className="columns">
         <div className="column is-full-mobile is-6-tablet is-offset-3-tablet is-one-third-desktop is-offset-one-third-desktop">
           <form onSubmit={handleSubmit}>
+            {errors.error && (
+              <div className="notification is-danger is-light">
+                {errors.error}
+              </div>
+            )}
             <div className="field">
               <label className="label">Username</label>
               <div className="control has-icons-left has-icons-right">

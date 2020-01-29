@@ -48,7 +48,10 @@ const Root = () => {
             path="/signin"
             render={props => <Signin {...props} refetch={refetch} />}
           />
-          <Route path="/signup" component={Signup} />
+          <Route
+            path="/signup"
+            render={props => <Signup {...props} refetch={refetch} />}
+          />
         </Switch>
       </React.Fragment>
     </Router>
