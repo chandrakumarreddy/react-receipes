@@ -5,7 +5,8 @@ import { sign_in } from "../../Queries/mutation";
 
 const initialErrors = {
   email: "",
-  password: ""
+  password: "",
+  error: ""
 };
 
 export default function Signin(props) {
@@ -17,16 +18,26 @@ export default function Signin(props) {
     e.preventDefault();
     const errors = {};
     if (!email) errors.email = "Email cannot be empty";
-    if (Object.keys(errors).length > 0) setErrors(errors);
-    const { data } = await signIn({ variables: { email, password } });
-    localStorage.setItem("token", data.signInUser.token);
-    props.refetch();
-    props.history.push("/");
+    if (Object.keys(errors).length > 0)
+      setErrors(prev => ({ ...prev, errors }));
+    try {
+      const { data } = await signIn({ variables: { email, password } });
+      localStorage.setItem("token", data.signInUser.token);
+      props.refetch();
+      props.history.push("/");
+    } catch (error) {
+      setErrors(prev => ({ ...prev, error: error.message }));
+    }
   };
   return (
     <section className="section">
       <div className="columns">
         <div className="column is-full-mobile is-6-tablet is-offset-3-tablet is-one-third-desktop is-offset-one-third-desktop">
+          {errors.error && (
+            <div className="notification is-danger is-light">
+              {errors.error}
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="field">
               <label className="label">Email</label>
